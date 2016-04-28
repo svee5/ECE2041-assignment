@@ -1,7 +1,7 @@
 
 clear all ; clc;
 
-codeword_gen = (randi([0 1],12,1))'
+codeword_gen = (randi([0 1],12,1))';
 codeword1 = codeword_gen(1:4);
 codeword2 = codeword_gen(5:8);
 codeword3 = codeword_gen(9:12);
@@ -48,7 +48,7 @@ end
 signal_2 = spreadingseq2 - '0'; % - '0' to change string to array
 array2 = zeros(1,length(signal_2));
 for j = 1:length(signal_2)
-   if signal_2(j) == 0
+  if signal_2(j) == 0
        array2(j) = 1;
    else 
        array2(j) = -1;
@@ -58,8 +58,8 @@ end
 signal_3 = spreadingseq3 - '0'; % - '0' to change string to array
 array3 = zeros(1,length(signal_3));
 for k = 1:length(signal_3)
-   if signal_3(k) == 0
-       array3(k) = 1;
+  if signal_3(k) == 0
+      array3(k) = 1;
    else 
        array3(k) = -1;
    end
@@ -70,9 +70,12 @@ compositesequence = array1 + array2 + array3;
 
 %Demultiplexing
 %User 1
-
-
-user1 = [codeword1,codeword1].*compositesequence ;
+%codeword1 = num2str(codeword1) ; 
+%string1 = strcat(codeword1,' ',codeword1) 
+%codeword1 = str2num(string1) ;
+codeword1 = [codeword1,codeword1] ; 
+user1 = codeword1.*compositesequence ;
+%user1 = [[codeword1,codeword1].*compositesequence] ;
 firsthalf = sum(user1(1,1:4)) ;
 secondhalf = sum(user1(1,5:8)) ;
 user1data = [firsthalf/4,secondhalf/4] ;
