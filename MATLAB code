@@ -1,1 +1,78 @@
 
+clear all ; clc;
+
+codeword_gen = (randi([0 1],12,1))'
+codeword1 = codeword_gen(1:4);
+codeword2 = codeword_gen(5:8);
+codeword3 = codeword_gen(9:12);
+
+userdata1 = [0,0];
+userdata2 = [1,0];
+userdata3 = [1,1];
+
+
+%for user1
+a = userdata1(1) .* ones(1,4);
+raw_spreading_seq1 = dec2bin(a+codeword1)';
+seq1 = raw_spreading_seq1(1,:);
+seq1 = num2str(seq1);
+spreadingseq1 = strcat(seq1,seq1);
+
+%for user2
+b1 = [userdata2(1),userdata2(1),userdata2(1),userdata2(1)] ;
+b2 = [userdata2(2),userdata2(2),userdata2(2),userdata2(2)] ;
+raw_spreading_seq2_1 = dec2bin(b1+codeword2)' ;
+raw_spreading_seq2_2 = dec2bin(b2+codeword2)' ;
+seq2_1 = raw_spreading_seq2_1(1,:) ;
+seq2_2 = raw_spreading_seq2_2(1,:) ;
+spreadingseq2 = strcat(seq2_1,seq2_2);
+
+
+%for user3
+c = [userdata3(1),userdata3(1),userdata3(1),userdata3(1)] ;
+raw_spreading_seq3 = dec2bin(c+codeword3)';
+seq3 = raw_spreading_seq3(1,:);
+seq3 = num2str(seq3);
+spreadingseq3 = strcat(seq3,seq3);
+
+signal_1 = spreadingseq1 - '0'; % - '0' to change string to array
+array1 = zeros(1,length(signal_1));
+for i = 1:length(signal_1)
+   if signal_1(i) == 0
+       array1(i) = 1;
+   else 
+       array1(i) = -1;
+   end
+end
+
+signal_2 = spreadingseq2 - '0'; % - '0' to change string to array
+array2 = zeros(1,length(signal_2));
+for j = 1:length(signal_2)
+   if signal_2(j) == 0
+       array2(j) = 1;
+   else 
+       array2(j) = -1;
+   end
+end
+
+signal_3 = spreadingseq3 - '0'; % - '0' to change string to array
+array3 = zeros(1,length(signal_3));
+for k = 1:length(signal_3)
+   if signal_3(k) == 0
+       array3(k) = 1;
+   else 
+       array3(k) = -1;
+   end
+end
+
+compositesequence = array1 + array2 + array3;
+
+
+%Demultiplexing
+%User 1
+
+
+user1 = [codeword1,codeword1].*compositesequence ;
+firsthalf = sum(user1(1,1:4)) ;
+secondhalf = sum(user1(1,5:8)) ;
+user1data = [firsthalf/4,secondhalf/4] ;
